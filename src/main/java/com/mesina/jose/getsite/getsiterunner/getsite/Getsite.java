@@ -1,5 +1,6 @@
 package com.mesina.jose.getsite.getsiterunner.getsite;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -10,13 +11,17 @@ import javax.persistence.Id;
 public class Getsite {
 
     @Id
+    @Column(name = "diid", unique = true)
     private String diid;
     private String fidn;
     private String dbname;
     private String backend;
 
     public Getsite(){
+    }
 
+    public Getsite(String diid){
+        this.diid = diid;
     }
 
     public Getsite(String diid, String fidn, String dbname, String backend) {

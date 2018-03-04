@@ -3,6 +3,7 @@ package com.mesina.jose.getsite.getsiterunner.getsite;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,11 +12,16 @@ import java.util.List;
 @Service
 public class GetsiteService {
 
-    @Autowired
     private GetsiteRepository getsiteRepository;
 
-    public List<Getsite> getAllSites(){
-        return (List<Getsite>) getsiteRepository.findAll();
+    public GetsiteService(GetsiteRepository getsiteRepository) {
+        this.getsiteRepository = getsiteRepository;
+    }
+
+    public List<Getsite> getAllSites() {
+        List<Getsite> getsites = new ArrayList<>();
+        getsiteRepository.findAll().forEach(getsites::add);
+        return getsites;
     }
 
     public Getsite getSite(String diid) {
@@ -27,7 +33,17 @@ public class GetsiteService {
     }
 
     public void updateGetsite(Getsite getsite, String diid) {
+        Getsite existingGetsite = getsiteRepository.findOne(diid);
         getsiteRepository.save(getsite);
+
+        if (existingGetsite != null) {
+            existingGetsite.setDbname(getsite.getDbname());
+            existingGetsite.setFidn(getsite.getFidn());
+            existingGetsite.setBackend(getsite.getBackend());
+        }
+
+        getsiteRepository.save(existingGetsite);
+
     }
 
     public void deleteGetsite(String diid) {
